@@ -52,12 +52,17 @@ public class EmployeeResource {
     }
 
     @PutMapping
-    public Employee update(@RequestBody Employee employee){
-        return null;
+    public ResponseEntity<EntityModel<Employee>> update(@RequestBody Employee employee){
+        Employee updatedEmployee = employeeService.update(employee);
+        Link link1 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeResource.class).get(updatedEmployee.getId())).withSelfRel();
+        Link link2 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EmployeeResource.class).getAll()).withRel("all");
+        EntityModel<Employee> updatedEntityModel = EntityModel.of(updatedEmployee, link1, link2);
+        return ResponseEntity.created(updatedEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(updatedEntityModel);
     }
 
-    @DeleteMapping
-    public Employee delete(@RequestBody Employee employee){
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        employeeService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
