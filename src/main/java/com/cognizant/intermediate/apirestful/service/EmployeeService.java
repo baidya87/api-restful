@@ -29,7 +29,21 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    public Employee update(Employee employee){
+        Employee employeeToUpdate = get(employee.getId());
+        if(employeeToUpdate == null) {
+            return employeeRepository.save(employee);
+        }
+        employeeToUpdate.setEmail(employee.getEmail());
+        employeeToUpdate.setName(employee.getName());
+        return employeeRepository.save(employeeToUpdate);
+    }
+
     public  Employee get(long id){
         return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+    }
+
+    public void delete(long id) {
+        employeeRepository.deleteById(id);
     }
 }
