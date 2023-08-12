@@ -23,4 +23,8 @@ public class OrderService {
     public List<Order> allOrders(){
         return orderRepository.findAll();
     }
+
+    public Order add(Order order) {
+        return orderRepository.save(order);
+    }
 }

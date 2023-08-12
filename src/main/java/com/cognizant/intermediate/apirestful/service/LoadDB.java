@@ -1,8 +1,10 @@
 package com.cognizant.intermediate.apirestful.service;
 
+import com.cognizant.intermediate.apirestful.pojo.Book;
 import com.cognizant.intermediate.apirestful.pojo.Employee;
 import com.cognizant.intermediate.apirestful.pojo.Order;
 import com.cognizant.intermediate.apirestful.pojo.Status;
+import com.cognizant.intermediate.apirestful.repository.BookRepository;
 import com.cognizant.intermediate.apirestful.repository.EmployeeRepository;
 import com.cognizant.intermediate.apirestful.repository.OrderRepository;
 import org.slf4j.Logger;
@@ -11,18 +13,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Consumer;
-
 @Component
 public class LoadDB {
 
     private static final Logger log = LoggerFactory.getLogger(LoadDB.class);
     private final EmployeeRepository employeeRepository;
     private final OrderRepository orderRepository;
+    private final BookRepository bookRepository;
 
-    public LoadDB(EmployeeRepository employeeRepository, OrderRepository orderRepository) {
+    public LoadDB(EmployeeRepository employeeRepository, OrderRepository orderRepository, BookRepository bookRepository) {
         this.employeeRepository = employeeRepository;
         this.orderRepository = orderRepository;
+        this.bookRepository = bookRepository;
         loadH2Database();
     }
 
@@ -40,6 +42,11 @@ public class LoadDB {
         return commandLineRunner;
     }
 
+    /**
+     * Using the Spring data JPA to load to DB.
+     * @return
+     */
+
     @Bean
     public CommandLineRunner loadOrder() {
         return (args) -> {
@@ -47,6 +54,20 @@ public class LoadDB {
             log.info("Loading order {} to H2 DB", orderRepository.save(new Order("Windows DELL", Status.ONGOING)));
             log.info("Loading order {} to H2 DB", orderRepository.save(new Order("Chromebook", Status.CANCELLED)));
             log.info("Loading order {} to H2 DB", orderRepository.save(new Order("Apple iPAD Air", Status.COMPLETED)));
+        };
+    }
+
+    /**
+     * Using the JPA Entity Manager to load the DB.
+     * @return
+     */
+    @Bean
+    public CommandLineRunner loadBooks(){
+        return (args) -> {
+            bookRepository.save(new Book("Harry Potter & Prisoner of Azkaban", "JK Rowling", 23.22f));
+            bookRepository.save(new Book("Harry Potter & Goblet of Fire", "JK Rowling", 25.22f));
+
+            System.out.println(bookRepository.find(2));
         };
     }
 

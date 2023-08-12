@@ -1,6 +1,8 @@
 package com.cognizant.intermediate.apirestful.pojo;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "EMPLOYEE_ORDER")
@@ -8,7 +10,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Size(min = 1, message = "Order name can't be blank")
     private String orderName;
+
     private Status status;
 
     public Order(){}

@@ -9,16 +9,13 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "order")
+@RequestMapping(path = "orders")
 public class OrderResource {
 
     private final OrderService orderService;
@@ -38,5 +35,12 @@ public class OrderResource {
         Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OrderResource.class).all()).withSelfRel();
         List<EntityModel<Order>> orders = orderService.allOrders().stream().map(LinkUtil::link).collect(Collectors.toList());
         return ResponseEntity.ok().body(CollectionModel.of(orders, link));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> add(@RequestBody Order order){
+        Order savedOrder = orderService.add(order);
+        return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(OrderResource.class).get(savedOrder.getId())).withSelfRel().toUri())
+                      .body(LinkUtil.link(savedOrder));
     }
 }
