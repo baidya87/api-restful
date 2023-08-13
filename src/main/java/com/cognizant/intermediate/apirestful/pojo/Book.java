@@ -1,14 +1,13 @@
 package com.cognizant.intermediate.apirestful.pojo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "book_records")
 public class Book {
-    @Id@GeneratedValue(strategy = GenerationType.AUTO)
+    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "book_name")
     private String name;
     private String author;
     private float price;

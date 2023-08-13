@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 @Table(name = "EMPLOYEE_ORDER")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Size(min = 1, message = "Order name can't be blank")
